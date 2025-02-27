@@ -1,0 +1,49 @@
+.balanceList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem 1rem;
+    gap: 1.75rem;
+
+    .balanceListItem {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 90vw;
+        min-width: 350px;
+        padding: .5rem 1rem;
+        gap: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-complex);
+        background: var(--background-card);
+    
+        .tokenContainer {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            width: 60%;
+        }
+
+        .valueContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: .15rem;
+            width: 40%;
+
+            .valueItem {
+                align-self: self-end;
+                font-weight: bold;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                
+                &:last-child {
+                    font-size: .85rem;
+                    color: gray;
+                }
+            }
+        }
+    }
+}
