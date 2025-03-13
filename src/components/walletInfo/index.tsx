@@ -44,7 +44,7 @@ export default function WalletInfo({ chain, walletAddress, attributes, handleWal
 
       {chain && walletAddress && (
         <>
-          <Typography variant="body1">{`${data?.symbol}: ${formatValue(data?.value, data?.decimals)}`}</Typography>
+          <Typography variant="body1">{`${data?.symbol || chain?.name}: ${formatValue(data?.value, data?.decimals)}`}</Typography>
 
           <Typography variant="body2">{walletAddress || ""}</Typography>
 

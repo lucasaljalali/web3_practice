@@ -1,44 +1,53 @@
-import { useEvmWalletTokenBalances } from "@moralisweb3/next";
-import { Typography } from "@mui/material";
+import { Typography, CircularProgress, Alert } from "@mui/material";
+import { Token } from "@/app/api/theGraph/interfaces";
 import Image from "next/image";
 import styles from "./index.module.css";
 
 interface IBalanceList {
-  chainId: string | number;
-  address: string;
+  tokens: Token[];
+  loading: boolean;
+  error: string | null;
 }
 
-export default function BalanceList({ chainId, address }: IBalanceList) {
-  const { data: walletBalances } = useEvmWalletTokenBalances({ chain: `0x${chainId.toString(16)}`, address });
-  const tokensList = walletBalances?.filter((item) => !item.token?.possibleSpam) || [];
+export default function BalanceList({ tokens, loading, error }: IBalanceList) {
+  if (loading) {
+    return (
+      <div className={styles.balanceList}>
+        <CircularProgress />
+        <Typography>Loading tokens...</Typography>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.balanceList}>
+        <Alert severity="error">{error}</Alert>
+      </div>
+    );
+  }
+
+  if (!tokens.length) {
+    return (
+      <div className={styles.balanceList}>
+        <Typography>No tokens found.</Typography>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.balanceList}>
-      {tokensList.map((item) => (
-        <div key={item.token?.contractAddress.lowercase} className={styles.balanceListItem}>
+      {tokens.map((token) => (
+        <div key={token.id} className={styles.balanceListItem}>
           <div className={styles.tokenContainer}>
-            <Image
-              className={styles.logo}
-              src={item.token?.logo || "/MetaMask_Fox.png"}
-              alt={`${item.token?.name} logo`}
-              width={40}
-              height={40}
-              priority
-            />
-
-            <Typography variant="body1" title={item.token?.name || ""}>
-              {item.token?.symbol || ""}
+            <Image className={styles.logo} src="/MetaMask_Fox.png" alt={`${token.name} logo`} width={40} height={40} priority />
+            <Typography variant="body1" title={token.name}>
+              {token.symbol}
             </Typography>
           </div>
 
           <div className={styles.valueContainer}>
-            <Typography variant="body2" className={styles.valueItem}>
-              {`${item.value?.slice(0, 7) || ""} ${item.token?.symbol || ""}`}
-            </Typography>
-
-            <Typography variant="body2" className={styles.valueItem}>
-              {`${item.value?.slice(0, 7) || ""} ${item.token?.symbol || ""}`}
-            </Typography>
+            <Typography variant="body2">{`${token.derivedETH} ETH`}</Typography>
           </div>
         </div>
       ))}
